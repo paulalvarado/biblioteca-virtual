@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Generos;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GenerosController extends Controller
 {
@@ -20,20 +21,29 @@ class GenerosController extends Controller
 
     public function view_genero($id_genero)
     {
-        $genero = Generos::findOrFail($id_genero);
-        // verificamos el estado del genero
-        if ($genero->estado == 0) {
+        try {
+            $genero = Generos::findOrFail($id_genero);
+
+            // verificamos el estado del genero
+            if ($genero->estado == 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Género no encontrado',
+                    'data' => null
+                ], 404);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Género encontrado',
+                    'data' => $genero
+                ], 200);
+            }
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Género no encontrado',
                 'data' => null
             ], 404);
-        } else {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Género encontrado',
-                'data' => $genero
-            ], 200);
         }
     }
 
@@ -61,15 +71,23 @@ class GenerosController extends Controller
             'id_genero' => 'required|integer',
         ]);
 
-        $genero = Generos::findOrFail($request->id_genero);
-        $genero->nombre_genero = $request->nombre_genero;
-        $genero->estado = $request->estado;
-        $genero->save();
-        return response()->json([
-            "status" => "success",
-            "message" => "Se ha actualizado el género literario.",
-            "id_genero" => $genero->id_genero
-        ], 200);
+        try {
+            $genero = Generos::findOrFail($request->id_genero);
+            $genero->nombre_genero = $request->nombre_genero;
+            $genero->estado = $request->estado;
+            $genero->save();
+            return response()->json([
+                "status" => "success",
+                "message" => "Se ha actualizado el género literario.",
+                "id_genero" => $genero->id_genero
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Género no encontrado',
+                'data' => null
+            ], 404);
+        }
     }
 
     public function delete_genero(Request $request)
@@ -78,12 +96,20 @@ class GenerosController extends Controller
             'id_genero' => 'required|integer',
         ]);
 
-        $genero = Generos::findOrFail($request->id_genero);
-        $genero->delete();
-        return response()->json([
-            "status" => "success",
-            "message" => "Se ha eliminado el género literario.",
-            "id_genero" => $genero->id_genero
-        ], 200);
+        try {
+            $genero = Generos::findOrFail($request->id_genero);
+            $genero->update(['estado' => 0]);
+            return response()->json([
+                "status" => "success",
+                "message" => "Se ha eliminado el género literario.",
+                "id_genero" => $genero->id_genero
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Género no encontrado',
+                'data' => null
+            ], 404);
+        }
     }
 }

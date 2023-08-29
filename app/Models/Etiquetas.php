@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Generos extends Model
+class Etiquetas extends Model
 {
     use HasFactory;
-    protected $table = 'generos';
-    protected $primaryKey = 'id_genero';
+    protected $table = 'etiquetas';
+    protected $primaryKey = 'id_etiqueta';
     protected $fillable = [
-        'nombre_genero',
+        'nombre_etiqueta',
         'estado',
         'created_at',
         'updated_at',
@@ -20,6 +20,6 @@ class Generos extends Model
     //Relationships Many to Many
     public function libros()
     {
-        return $this->belongsToMany(Libros::class, 'libro_genero', 'id_genero', 'id_libro');
+        return $this->belongsToMany(Libros::class, 'libro_etiqueta', 'id_etiqueta', 'id_libro');
     }
 }
