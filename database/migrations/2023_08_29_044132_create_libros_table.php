@@ -18,10 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('id_editorial');
             $table->date('fecha_publicacion');
             $table->text('imagen_portada')->nullable();
+            $table->text('descripcion')->nullable();
             $table->decimal('precio', 8, 2);
             $table->decimal('precio_renta', 8, 2);
             $table->integer('stock');
-            $table->text('descripcion')->nullable();
+            $table->integer('stock_renta');
             // default: 1 activo, 0 inactivo
             $table->tinyInteger('estado')->default(1);
             $table->timestamps();

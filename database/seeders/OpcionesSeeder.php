@@ -18,6 +18,5 @@ class OpcionesSeeder extends Seeder
         $rol_defecto->key = 'rol_defecto';
         $rol_defecto->value = '3';
         $rol_defecto->save();
-
     }
 }

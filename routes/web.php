@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\FrontEdnController;
+use App\Http\Controllers\FrontEnd\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Home FrontEnd
+Route::get('/', [HomeController::class, 'index'])->name('frontend.index');

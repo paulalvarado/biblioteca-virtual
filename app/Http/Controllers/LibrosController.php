@@ -8,10 +8,33 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LibrosController extends Controller
 {
-    public function list_libros()
+    public function list_libros(Request $request)
     {
-        // obtener todos libros con estado = 1
-        $libros = Libros::where('estado', 1)->get();
+        // Validar y obtener los parámetros de paginación
+        $page = $request->page;
+        $limit = $request->has('limit') ? $request->limit : 10; // Valor predeterminado si no se proporciona
+        $offset = ($page - 1) * $limit;
+        $search = $request->has('search') ? $request->search : '';
+
+        // obtener libros en caso de que search sea diferente de vacio
+        if ($search != '') {
+            $libros = Libros::with('autor')
+                ->where('nombre_libro', 'like', '%' . $search . '%')
+                ->orWhere('descripcion', 'like', '%' . $search . '%')
+                ->orderByDesc('id_libro')
+                ->orderByDesc('created_at')
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $libros = Libros::with('autor')
+                ->where('estado', 1)
+                ->orderByDesc('id_libro')
+                ->orderByDesc('created_at')
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        }
         // obtener generos de cada libro
         foreach ($libros as $libro) {
             $libro->generos;
@@ -20,6 +43,13 @@ class LibrosController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Lista de libros',
+            'paginacion' => [
+                'page' => $page,
+                'limit' => $limit,
+                'offset' => $offset,
+                'search' => $search,
+                'total' => Libros::where('estado', 1)->count()
+            ],
             'data' => $libros
         ], 200);
     }
@@ -69,6 +99,7 @@ class LibrosController extends Controller
             'precio' => 'required|numeric',
             'precio_renta' => 'required|numeric',
             'stock' => 'required|integer',
+            'stock_renta' => 'required|integer',
         ]);
 
         // Insertamos los datos del formulario en la tabla libros y retornamos el id del registro insertado
@@ -81,6 +112,7 @@ class LibrosController extends Controller
             'precio' => $request->precio,
             'precio_renta' => $request->precio_renta,
             'stock' => $request->stock,
+            'stock_renta' => $request->stock,
             'imagen_portada' => $request->imagen_portada,
             'estado' => 1,
         ]);

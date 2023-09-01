@@ -70,6 +70,7 @@ class LibrosFactory extends Factory
             'precio' => $this->faker->randomFloat(2, 25, 100),
             'precio_renta' => $this->faker->randomFloat(2, 1, 20),
             'stock' => $this->faker->numberBetween(1, 100),
+            'stock_renta' => $this->faker->numberBetween(1, 100),
             // imagen de portada de libros de la biblioteca de pixabay
             // https://pixabay.com/es/images/search/libros/
             'imagen_portada' => $this->faker->randomElement($imagenes),

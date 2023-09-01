@@ -28,7 +28,7 @@ Route::get('autores', [AutoresController::class, 'list_autores']);
 Route::get('autores/{id_autor}', [AutoresController::class, 'view_autor']);
 Route::get('generos', [GenerosController::class, 'list_generos']);
 Route::get('generos/{id_genero}', [GenerosController::class, 'view_genero']);
-Route::get('libros', [LibrosController::class, 'list_libros']);
+Route::get('libros', [LibrosController::class, 'list_libros'])->name('libros.list');
 Route::get('libros/{id_libro}', [LibrosController::class, 'view_libro']);
 
 // verificacion por token
