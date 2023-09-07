@@ -13,41 +13,92 @@
     </div>
 
     {{-- generos --}}
-    <div class="h-auto my-3 flex">
-        <button id="arrow-left" class="me-3 h-8 aspect-square flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white rounded-lg">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <ul class="flex overflow-hidden grow" id="enlaces">
-            @foreach ($etiquetas as $item)
-                <li class="me-3 mb-3">
-                    <a href="#" class="flex justify-center items-center border border-gray-300 hover:drop-shadow-lg hover:border-orange-300 px-3 py-1 rounded-lg drop-shadow-sm bg-white">
-                        <i class="fa-regular fa-hashtag"></i> {{ $item->nombre_etiqueta }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-        <button id="arrow-right" class="ms-3 h-8 aspect-square flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white rounded-lg">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-    </div>
+    @if (isset($etiquetas))
+        <div class="h-auto my-3 flex">
+            <button id="arrow-left"
+                class="me-3 h-8 aspect-square flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white rounded-lg">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <ul class="flex overflow-hidden grow" id="enlaces">
+                @foreach ($etiquetas as $item)
+                    <li class="me-3 mb-3">
+                        @if (isset($etiqueta) && $etiqueta->id_etiqueta == $item->id_etiqueta)
+                            <a href="{{ route('frontend.index') }}"
+                                class="flex justify-center items-center border border-orange-500 text-white hover:drop-shadow-lg px-3 py-1 rounded-lg drop-shadow-sm bg-orange-500">
+                                <i class="fa-regular fa-hashtag"></i> {{ $item->nombre_etiqueta }}
+                            </a>
+                            <script>
+                                let id_etiqueta = {{ $item->id_etiqueta }};
+                            </script>
+                        @else
+                            <a href="{{ route('frontend.libros_etiqueta', $item->id_etiqueta) }}"
+                                class="flex justify-center items-center border border-gray-300 hover:drop-shadow-lg hover:border-orange-500 hover:bg-orange-500 hover:text-white px-3 py-1 rounded-lg drop-shadow-sm bg-white">
+                                <i class="fa-regular fa-hashtag"></i> {{ $item->nombre_etiqueta }}
+                            </a>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+            <button id="arrow-right"
+                class="ms-3 h-8 aspect-square flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white rounded-lg">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    @endif
 </div>
-<script>
-    $(document).ready(function() {
-        $('#enlaces').slick({
-            infinite: true,
-            slidesToShow: 3,
-            slidesToScroll: 3,
-            variableWidth: true,
-        });
+@if (isset($etiquetas))
+    <script>
+        $(document).ready(function() {
 
-        // boton de flecha izquierda
-        $('#arrow-left').click(function() {
-            $('#enlaces').slick('slickPrev');
-        });
+            if (typeof id_etiqueta !== 'undefined') {
+                id_etiqueta = id_etiqueta - 1;
+                // guardar en localstorage
+                localStorage.setItem('id_etiqueta', id_etiqueta);
+            } else {
+                id_etiqueta = 0;
+            }
+            $('#enlaces').slick({
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                variableWidth: true,
+                initialSlide: parseInt(localStorage.getItem('id_etiqueta')),
+                responsive: [{
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            variableWidth: true,
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            variableWidth: true,
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            variableWidth: true,
+                        }
+                    }
+                ]
+            });
 
-        // boton de flecha derecha
-        $('#arrow-right').click(function() {
-            $('#enlaces').slick('slickNext');
+            // boton de flecha izquierda
+            $('#arrow-left').click(function() {
+                $('#enlaces').slick('slickPrev');
+            });
+
+            // boton de flecha derecha
+            $('#arrow-right').click(function() {
+                $('#enlaces').slick('slickNext');
+            });
         });
-    });
-</script>
+    </script>
+@endif

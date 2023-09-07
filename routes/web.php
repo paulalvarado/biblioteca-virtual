@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 // Home FrontEnd
 Route::get('/', [HomeController::class, 'index'])->name('frontend.index');
+
+// Libros por etiqueta
+Route::get('libros/etiqueta/{tag}', [HomeController::class, 'libros_etiqueta'])->name('frontend.libros_etiqueta');
+
+// pruebas
+Route::get('pruebas', [HomeController::class, 'pruebas'])->name('frontend.pruebas');

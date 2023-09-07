@@ -5,6 +5,7 @@
 <title>@yield('titulo')</title>
 {{-- traemos el css de la carpeta public --}}
 @vite('resources/css/app.css')
+@vite('resources/js/app.js')
 <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 
 {{-- Slick Slider --}}
@@ -16,14 +17,6 @@
 
 {{-- Slick Slider --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<script>
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark')
-    }
-</script>
 
 {{-- Paginatejs --}}
-<script src="js/pagination.js"></script>
+<script src="{{ route('frontend.index') }}/js/pagination.js"></script>

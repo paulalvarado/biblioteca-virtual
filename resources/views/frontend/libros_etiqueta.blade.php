@@ -1,9 +1,9 @@
 @extends('plantillas.plantilla')
 @section('titulo')
-    Inicio | Biblioteca Virtual
+    Etiqueta #{{ $etiqueta->nombre_etiqueta }} | Biblioteca Virtual
 @endsection
 @section('contenido')
-    <h1 class="text-2xl font-bold">Libros</h1>
+    <h1 class="text-2xl font-bold">Libros con etiqueta #{{ $etiqueta->nombre_etiqueta }}</h1>
     <div class="my-6 pagination-container"></div>
     <div class="data-container grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         <div role="status"
@@ -66,14 +66,14 @@
     </div>
     <script>
         jQuery('.pagination-container').pagination({
-            dataSource: '{{ route('libros.list') }}',
+            dataSource: '{{ route('libros.list_x_etiqueta', ['tag' => $etiqueta->id_etiqueta]) }}',
             callback: function(data, pagination) {
                 $('.btn-pagination').click(function() {
+                    console.log('click');
                     // verifica si tiene la clase current
                     if ($(this).hasClass('current')) {
                         return false;
                     }
-                    console.log('click');
                     jQuery('.data-container').html(
                         `<div role="status"
                             class="w-full space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center rounded-lg shadow">
@@ -195,6 +195,9 @@
                 var html = template(data);
                 jQuery('.data-container').html(html);
             },
+            afterPageOnClick: function() {
+
+            },
             locator: 'data',
             totalNumberLocator: function(response) {
                 // you can return totalNumber by analyzing response content
@@ -213,6 +216,7 @@
             // clase para los botontes ...
             classPrefix: 'flex items-center justify-center px-3 h-8 leading-tight border border-gray-500',
         })
+
 
         function template(data) {
             var html = '';

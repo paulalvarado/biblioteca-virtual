@@ -54,6 +54,42 @@ class LibrosController extends Controller
         ], 200);
     }
 
+    public function list_libros_x_etiqueta($tag = 0, Request $request)
+    {
+        // Validar y obtener los parámetros de paginación
+        $page = $request->page;
+        $limit = $request->has('limit') ? $request->limit : 10; // Valor predeterminado si no se proporciona
+        $offset = ($page - 1) * $limit;
+
+        // obtener libros x etiqueta
+        $libros = Libros::with('autor')
+            ->where('estado', 1)
+            ->whereHas('etiquetas', function ($query) use ($tag) {
+                $query->where('etiquetas.id_etiqueta', $tag); // Especifica la tabla "etiquetas"
+            })
+            ->orderByDesc('id_libro')
+            ->orderByDesc('created_at')
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
+        // obtener generos de cada libro
+        foreach ($libros as $libro) {
+            $libro->generos;
+            $libro->etiquetas;
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Lista de libros',
+            'paginacion' => [
+                'page' => $page,
+                'limit' => $limit,
+                'offset' => $offset,
+                'total' => $libros->count()
+            ],
+            'data' => $libros
+        ], 200);
+    }
+
     public function view_libro($id_libro)
     {
         // obtener libro por id

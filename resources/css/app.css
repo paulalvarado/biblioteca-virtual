@@ -1,4 +1,8 @@
+@import 'flowbite/dist/flowbite.css';
+
+/* sweetalert2 */
+
+@import 'sweetalert2/dist/sweetalert2.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'flowbite/dist/flowbite.css';

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\LibroGenero;
 use App\Models\Autores;
+use App\Models\Editoriales;
+use App\Models\Etiquetas;
 
 class Libros extends Model
 {
